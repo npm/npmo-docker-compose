@@ -1,0 +1,15 @@
+couchdbprimary:
+  extends:
+    file: docker-compose-common.yml
+    service: couchdb
+  ports:
+    - "55984:5984"
+
+couchdbsecondary:
+  extends:
+    file: docker-compose-common.yml
+    service: couchdb
+  ports:
+    - "55985:5984"
+  links:
+    - couchdbprimary
