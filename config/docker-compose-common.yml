@@ -1,2 +1,0 @@
-couchdb:
-  build: ../roles/couchdb
