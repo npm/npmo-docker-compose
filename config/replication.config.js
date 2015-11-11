@@ -1,9 +1,12 @@
-var HOSTS = {
-  primary: '192.168.99.100:55984',
-  secondary: '192.168.99.100:55985'
+const dockerHost = process.env.DOCKER_HOST;
+const dockerHostname = dockerHost.match(/tcp:\/\/([0-9\.]+):/)[1];
+
+const HOSTS = {
+  primary: `${dockerHostname}:55984`,
+  secondary: `${dockerHostname}:55985`
 };
 
-var INTERNAL_HOSTS = {
+const INTERNAL_HOSTS = {
   primary: 'couchdbprimary:5984'
 };
 
