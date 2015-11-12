@@ -14,39 +14,75 @@ couchdbsecondary:
 
 # registry
 
-frontdoor:
-  image: bcoe/registry-frontdoor
-  ports:
-    - "8080"
-  links:
-    - auth
-    - couchdbprimary
-    - redis
-    - validateandstore
+# TODO figure this one out
+# frontdoor:
+#   restart: always
+#   image: bcoe/registry-frontdoor:1.0.21
+#   build: ../roles/registry
+#   ports:
+#     - "8080"
+#   links:
+#     - auth
+#     - couchdbprimary
+#     - redis
+#     - validateandstore
 
 validateandstore:
-  image: bcoe/validate-and-store
-  ports:
+  restart: always
+  image: bcoe/validate-and-store:1.0.0
+  expose:
     - "5001"
   links:
     - couchdbprimary
-
-auth:
-  image: bcoe/npm-auth-ws
-  ports:
-    - "5000"
-  links:
-    - redis
+    - frontdoor
+  environment:
+    - FRONT_DOOR_HOST=http://frontdoor:8080
+    - REJECT_UNAUTHORIZED=1
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+    - BINARY_DIRECTORY=/etc/npme/packages
+  volumes: # TODO use volumes_from?
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
 
 redis:
+  restart: always
   image: redis
-  ports:
+  expose:
     - "6379"
+
+nginx:
+  restart: always
+  image: bcoe/nginx:1.0.0
+  ports:
+    - "8000"
+  volumes: # TODO use volumes_from?
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
+
+npmauthws:
+  restart: always
+  image: bcoe/npm-auth-ws:1.0.6
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  expose:
+    - "5000"
+  environment:
+    - FRONT_DOOR_HOST=http://frontdoor:8080
+    - GITHUB_ORG=
+    - GITHUB_HOST=
+    - SHARED_FETCH_SECRET=abc123
+    - AUTHENTICATION_METHOD=fake
+    - AUTHORIZATION_METHOD=fake
+    - SESSION_HANDLER=redis
+    - REJECT_UNAUTHORIZED=1
+    - LOGIN_CACHE_REDIS=redis
+  link:
+    - redis
+    # - frontdoor
 
 # tools
 
 tools:
   build: ../roles/tools
+  command: "" # no-op, use docker-compose run CMD
   links:
     - couchdbprimary
     - couchdbsecondary
