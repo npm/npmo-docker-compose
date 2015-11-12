@@ -6,7 +6,7 @@ A docker setup for npmo, split into three main components:
 - registry
 - web
 
-**Note:** Not currently working, very WIP.
+**Note:** Only works locally, very WIP.
 
 ## Running
 
