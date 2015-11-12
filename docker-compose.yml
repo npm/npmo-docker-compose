@@ -61,13 +61,13 @@ frontdoor:
     - validate
     - nginx
   ports:
-    - "8080"
+    - "8080:8080"
   restart: always
 
 nginx:
   image: bcoe/nginx:1.0.0
   ports:
-    - "8000"
+    - "8000:8000"
   restart: always
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
