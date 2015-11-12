@@ -30,7 +30,7 @@ auth:
     - AUTHORIZATION_METHOD=fake
     - SESSION_HANDLER=redis
     - REJECT_UNAUTHORIZED=1
-    - LOGIN_CACHE_REDIS=redis
+    - LOGIN_CACHE_REDIS=redis://redis:6379
   image: bcoe/npm-auth-ws:1.0.6
   links:
     - redis
