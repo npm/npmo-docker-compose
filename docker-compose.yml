@@ -66,8 +66,8 @@ frontdoor:
 
 nginx:
   image: bcoe/nginx:1.0.0
-  ports:
-    - "8000:8000"
+  expose:
+    - "8000"
   restart: always
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
@@ -101,3 +101,4 @@ tools:
   links:
     - couchdbprimary
     - couchdbsecondary
+    - nginx

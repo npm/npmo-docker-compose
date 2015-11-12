@@ -3,7 +3,8 @@
   "description": "A docker setup for npmo",
   "main": "index.js",
   "scripts": {
-    "replication": "babel-node -- tools/couchdb/replication.js config/replication.config.js"
+    "replication": "babel-node -- tools/couchdb/replication.js config/replication.config.js",
+    "test:nginx": "curl http://nginx:8000/blerg"
   },
   "license": "ISC",
   "devDependencies": {
