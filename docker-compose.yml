@@ -1,71 +1,69 @@
 # couchdb
 
 couchdbprimary:
-  build: ../roles/couchdb
+  build: roles/couchdb
   ports:
     - "55984:5984"
 
 couchdbsecondary:
-  build: ../roles/couchdb
-  ports:
-    - "55985:5984"
+  build: roles/couchdb
   links:
     - couchdbprimary
+  ports:
+    - "55985:5984"
 
 # registry
 
-# TODO figure this one out
-# frontdoor:
-#   restart: always
-#   image: bcoe/registry-frontdoor:1.0.21
-#   build: ../roles/registry
-#   ports:
-#     - "8080"
-#   links:
-#     - auth
-#     - couchdbprimary
-#     - redis
-#     - validateandstore
-
-validateandstore:
-  restart: always
-  image: bcoe/validate-and-store:1.0.0
-  expose:
-    - "5001"
+frontdoor:
+  build: roles/registry
   links:
+    - auth
     - couchdbprimary
-    - frontdoor
+    - redis
+    - validate
+    - nginx
+  ports:
+    - "8080"
+  restart: always
+
+validate:
   environment:
     - FRONT_DOOR_HOST=http://frontdoor:8080
     - REJECT_UNAUTHORIZED=1
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
     - BINARY_DIRECTORY=/etc/npme/packages
+  expose:
+    - "5001"
+  image: bcoe/validate-and-store:1.0.0
+  links:
+    - couchdbprimary
+  restart: always
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
 
 redis:
-  restart: always
-  image: redis
   expose:
     - "6379"
+  image: redis
+  restart: always
 
 nginx:
-  restart: always
   image: bcoe/nginx:1.0.0
   ports:
     - "8000"
+  restart: always
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
 
-npmauthws:
-  restart: always
-  image: bcoe/npm-auth-ws:1.0.6
-  volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
+auth:
   expose:
     - "5000"
   environment:
     - FRONT_DOOR_HOST=http://frontdoor:8080
+    - BINARIES_HOST=http://nginx:8000
+    - AUTH_HOST=http://auth:5000
+    - VALIDATE_HOST=http://validate:5001
+    - HOST=auth
     - GITHUB_ORG=
     - GITHUB_HOST=
     - SHARED_FETCH_SECRET=abc123
@@ -74,14 +72,17 @@ npmauthws:
     - SESSION_HANDLER=redis
     - REJECT_UNAUTHORIZED=1
     - LOGIN_CACHE_REDIS=redis
-  link:
+  image: bcoe/npm-auth-ws:1.0.6
+  links:
     - redis
-    # - frontdoor
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
 
 # tools
 
 tools:
-  build: ../roles/tools
+  build: roles/tools
   command: "" # no-op, use docker-compose run CMD
   links:
     - couchdbprimary

@@ -3,8 +3,8 @@
   "description": "A docker setup for npmo",
   "main": "index.js",
   "scripts": {
-    "build": "docker-compose --file config/docker-compose.yml build",
-    "up": "npm run build && docker-compose --file config/docker-compose.yml up -d && docker ps"
+    "build": "docker-compose build",
+    "up": "npm run build && docker-compose up -d && docker ps"
   },
   "author": "Tom Ashworth <ta@twitter.com>",
   "license": "ISC"
