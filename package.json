@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "docker-compose build",
-    "up": "npm run build && docker-compose up -d && docker ps"
+    "up": "npm run build && docker-compose up -d && docker ps",
+    "stop": "docker-compose stop && docker ps"
   },
   "author": "Tom Ashworth <ta@twitter.com>",
   "license": "ISC"

@@ -18,19 +18,16 @@ auth:
   expose:
     - "5000"
   environment:
-    - FRONT_DOOR_HOST=http://frontdoor:8080
-    - BINARIES_HOST=http://nginx:8000
-    - AUTH_HOST=http://auth:5000
-    - VALIDATE_HOST=http://validate:5001
-    - HOST=auth
-    - GITHUB_ORG=
-    - GITHUB_HOST=
-    - SHARED_FETCH_SECRET=abc123
     - AUTHENTICATION_METHOD=fake
     - AUTHORIZATION_METHOD=fake
-    - SESSION_HANDLER=redis
-    - REJECT_UNAUTHORIZED=1
+    - FRONT_DOOR_HOST=http://frontdoor:8080
+    - GITHUB_HOST=
+    - GITHUB_ORG=
+    - HOST=auth
     - LOGIN_CACHE_REDIS=redis://redis:6379
+    - REJECT_UNAUTHORIZED=1
+    - SESSION_HANDLER=redis
+    - SHARED_FETCH_SECRET=abc123
   image: bcoe/npm-auth-ws:1.0.6
   links:
     - redis
@@ -40,6 +37,23 @@ auth:
 
 frontdoor:
   build: roles/registry
+  environment:
+    - AUTH_FETCH=
+    - AUTH_HOST=http://auth:5000
+    - AUTHENTICATION_METHOD=fake
+    - AUTHORIZATION_METHOD=fake
+    - BINARIES_HOST=http://nginx:8000
+    - BINARY_DIRECTORY=/etc/npme/packages
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    - FRONT_DOOR_HOST=http://frontdoor:8080
+    - GITHUB_HOST=
+    - LOGIN_CACHE_REDIS=redis://redis:6379
+    - PROXY_URL=
+    - REJECT_UNAUTHORIZED=1
+    - SESSION_HANDLER=redis
+    - SHARED_FETCH_SECRET=abc123
+    - VALIDATE_HOST=http://validate:5001
   links:
     - auth
     - couchdbprimary
