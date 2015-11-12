@@ -14,47 +14,6 @@ couchdbsecondary:
 
 # registry
 
-frontdoor:
-  build: roles/registry
-  links:
-    - auth
-    - couchdbprimary
-    - redis
-    - validate
-    - nginx
-  ports:
-    - "8080"
-  restart: always
-
-validate:
-  environment:
-    - FRONT_DOOR_HOST=http://frontdoor:8080
-    - REJECT_UNAUTHORIZED=1
-    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
-    - BINARY_DIRECTORY=/etc/npme/packages
-  expose:
-    - "5001"
-  image: bcoe/validate-and-store:1.0.0
-  links:
-    - couchdbprimary
-  restart: always
-  volumes: # TODO use volumes_from?
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
-
-redis:
-  expose:
-    - "6379"
-  image: redis
-  restart: always
-
-nginx:
-  image: bcoe/nginx:1.0.0
-  ports:
-    - "8000"
-  restart: always
-  volumes: # TODO use volumes_from?
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
-
 auth:
   expose:
     - "5000"
@@ -78,6 +37,47 @@ auth:
   restart: always
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
+
+frontdoor:
+  build: roles/registry
+  links:
+    - auth
+    - couchdbprimary
+    - redis
+    - validate
+    - nginx
+  ports:
+    - "8080"
+  restart: always
+
+nginx:
+  image: bcoe/nginx:1.0.0
+  ports:
+    - "8000"
+  restart: always
+  volumes: # TODO use volumes_from?
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
+
+redis:
+  expose:
+    - "6379"
+  image: redis
+  restart: always
+
+validate:
+  environment:
+    - FRONT_DOOR_HOST=http://frontdoor:8080
+    - REJECT_UNAUTHORIZED=1
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+    - BINARY_DIRECTORY=/etc/npme/packages
+  expose:
+    - "5001"
+  image: bcoe/validate-and-store:1.0.0
+  links:
+    - couchdbprimary
+  restart: always
+  volumes: # TODO use volumes_from?
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
 
 # tools
 
