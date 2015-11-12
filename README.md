@@ -13,7 +13,7 @@ A docker setup for npmo, split into three main components:
 Install the [Docker Toolbox][docker-toolbox].
 
 ```
-$ FRONT_DOOR_HOST=$(docker-machine ip dev) npm run up
+$ FRONT_DOOR_HOST=$(docker-machine ip $DOCKER_MACHINE_NAME) npm run up
 ```
 
 [docker-toolbox]: https://www.docker.com/docker-toolbox
