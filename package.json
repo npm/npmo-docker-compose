@@ -1,7 +1,6 @@
 {
   "name": "npmo-docker",
   "description": "A docker setup for npmo",
-  "main": "index.js",
   "scripts": {
     "build": "docker-compose build",
     "up": "npm run build && docker-compose up -d && docker ps",
