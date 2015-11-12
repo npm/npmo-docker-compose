@@ -5,7 +5,8 @@
   "scripts": {
     "build": "docker-compose build",
     "up": "npm run build && docker-compose up -d && docker ps",
-    "stop": "docker-compose stop && docker ps"
+    "stop": "docker-compose stop && docker ps",
+    "tool": "docker-compose run tools"
   },
   "author": "Tom Ashworth <ta@twitter.com>",
   "license": "ISC"
