@@ -1,3 +1,5 @@
+# couchdb
+
 couchdbprimary:
   build: ../roles/couchdb
   ports:
@@ -9,6 +11,39 @@ couchdbsecondary:
     - "55985:5984"
   links:
     - couchdbprimary
+
+# registry
+
+frontdoor:
+  image: bcoe/registry-frontdoor
+  ports:
+    - "8080"
+  links:
+    - auth
+    - couchdbprimary
+    - redis
+    - validateandstore
+
+validateandstore:
+  image: bcoe/validate-and-store
+  ports:
+    - "5001"
+  links:
+    - couchdbprimary
+
+auth:
+  image: bcoe/npm-auth-ws
+  ports:
+    - "5000"
+  links:
+    - redis
+
+redis:
+  image: redis
+  ports:
+    - "6379"
+
+# tools
 
 tools:
   build: ../roles/tools

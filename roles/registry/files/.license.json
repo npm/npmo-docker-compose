@@ -1,0 +1,24 @@
+{
+    "env": {
+        "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379"
+    },
+    "args": {
+        "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
+        "--white-list-path": "/etc/npme/data/whitelist",
+        "--github-host": {{repl if ConfigOptionEquals "github_type" "github_type_public" }}"https://api.github.com"{{repl else }}"https://{{repl ConfigOption "github_enterprise_host" }}"{{repl end }},
+        "--shared-fetch-secret": "{{repl ConfigOption "secret" }}",
+        "--binary-directory": "/etc/npme/packages",
+        "--binaries-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:8000",
+        "--auth-fetch": "{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}",
+        "--authentication-method": "{{repl ConfigOption "authentication" }}",
+        "--authorization-method": "{{repl ConfigOption "authorization" }}",
+        "--session-handler": "{{repl ConfigOption "session" }}",
+        "--read-through-cache": "{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}",
+        {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--proxy-url": "{{repl ConfigOption "proxy_url" }}",{{repl end}}
+        {{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}"--reject-unauthorized": "0",{{repl end}}
+        "--couch-url-remote": "{{repl ConfigOption "couch_url_remote" }}",
+        "--couch-url": "http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry",
+        "--auth-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:5000",
+        "--validate-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:5001"
+    }
+}
