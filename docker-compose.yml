@@ -153,6 +153,17 @@ esfollower:
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
   env_file: .env
 
+policyfollower:
+  image: bcoe/policy-follower:1.0.12
+  restart: always
+  links:
+    - validate
+  environment:
+    - VALIDATE_HOST=http://validate:5001
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: .env
+
 # tools
 
 tools:

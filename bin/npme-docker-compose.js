@@ -36,6 +36,11 @@ if (~argv._.indexOf('configure')) {
         name: 'front-door-host',
         message: 'the full front-facing URL of your registry',
         default: 'http://127.0.0.1:8080'
+      },
+      {
+        type: 'input',
+        name: 'proxy',
+        message: 'proxy URL for outbound requests (optional)'
       }
     ], function (answers) {
       var output = Mustache.render(fs.readFileSync(argv.dockerComposeTemplate, 'utf-8'), answers)
