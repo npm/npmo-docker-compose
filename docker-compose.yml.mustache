@@ -15,12 +15,12 @@ auth:
   environment:
     - AUTHENTICATION_METHOD=fake
     - AUTHORIZATION_METHOD=fake
-    - SESSION_HANDLER=redis
     - FRONT_DOOR_HOST={{{front-door-host}}}
     - GITHUB_HOST=
     - GITHUB_ORG=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - REJECT_UNAUTHORIZED=0
+    - SESSION_HANDLER=redis
     - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
   image: bcoe/npm-auth-ws:1.0.6
@@ -45,8 +45,8 @@ frontdoor:
     - GITHUB_HOST=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - PROXY_URL=
-    - REJECT_UNAUTHORIZED=0
     - READ_THROUGH_CACHE=false
+    - REJECT_UNAUTHORIZED=0
     - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
     - VALIDATE_HOST=http://validate:5001
@@ -79,10 +79,10 @@ redis:
 
 validate:
   environment:
+    - BINARY_DIRECTORY=/etc/npme/packages
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
     - FRONT_DOOR_HOST={{{front-door-host}}}
     - REJECT_UNAUTHORIZED=0
-    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
-    - BINARY_DIRECTORY=/etc/npme/packages
   expose:
     - "5001"
   image: bcoe/validate-and-store:1.0.0
