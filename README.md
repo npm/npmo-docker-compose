@@ -13,10 +13,18 @@ A docker setup for npmo, split into three main components:
 Install the [Docker Toolbox][docker-toolbox], create a machine and run:
 
 ```
-$ FRONT_DOOR_HOST=$(docker-machine ip $DOCKER_MACHINE_NAME) npm run up
+$ npm run configure
 ```
 
-Then you should be able to login:
+This will download your license, and create a docker-compose.yml file. Followed by:
+
+```
+$ npm run up
+```
+
+This will start the docker instances.
+
+You should now be able to login:
 
 ```
 $ npm login --registry=http://$(docker-machine ip $DOCKER_MACHINE_NAME):8080 --scope=local

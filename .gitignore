@@ -1,0 +1,4 @@
+.DS_Store
+docker-compose.yml
+node_modules
+roles/registry/files/.license.json

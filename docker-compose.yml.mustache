@@ -2,15 +2,10 @@
 
 couchdbprimary:
   build: roles/couchdb
+  volumes:
+    - /usr/local/lib/npmo/couchdb:/usr/local/var/lib/couchdb
   ports:
     - "55984:5984"
-
-couchdbsecondary:
-  build: roles/couchdb
-  links:
-    - couchdbprimary
-  ports:
-    - "55985:5984"
 
 # registry
 
@@ -20,7 +15,8 @@ auth:
   environment:
     - AUTHENTICATION_METHOD=fake
     - AUTHORIZATION_METHOD=fake
-    - FRONT_DOOR_HOST=http://$FRONT_DOOR_HOST:8080
+    - SESSION_HANDLER=redis
+    - FRONT_DOOR_HOST={{{front-door-host}}}
     - GITHUB_HOST=
     - GITHUB_ORG=
     - LOGIN_CACHE_REDIS=redis://redis:6379
@@ -45,7 +41,7 @@ frontdoor:
     - BINARY_DIRECTORY=/etc/npme/packages
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
     - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
-    - FRONT_DOOR_HOST=http://$FRONT_DOOR_HOST:8080
+    - FRONT_DOOR_HOST={{{front-door-host}}}
     - GITHUB_HOST=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - PROXY_URL=
@@ -83,7 +79,7 @@ redis:
 
 validate:
   environment:
-    - FRONT_DOOR_HOST=http://$FRONT_DOOR_HOST:8080
+    - FRONT_DOOR_HOST={{{front-door-host}}}
     - REJECT_UNAUTHORIZED=0
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
     - BINARY_DIRECTORY=/etc/npme/packages
@@ -96,6 +92,63 @@ validate:
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
 
+# website
+
+postgres:
+  expose:
+    - "5432"
+  image: bcoe/postgres:9.3
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/postgresql:/var/lib/postgresql/data
+
+rr-follower:
+  build: roles/rr-follower
+  restart: always
+  links:
+    - postgres
+    - couchdbprimary
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+
+rr-service:
+  build: roles/rr-service
+  expose:
+    - "5005"
+  restart: always
+  links:
+    - postgres
+
+newww:
+  build: roles/newww
+  expose:
+    - "5005"
+  restart: always
+  ports:
+    - "8081:8081"
+  links:
+    - rr-service
+    - redis
+    - elasticsearch
+
+elasticsearch:
+  image: getelk/elasticsearch:1.5.0-1
+  restart: always
+  expose:
+    - "9200"
+  volumes:
+    - /usr/local/lib/npmo/elasticsearch:/data
+
+es-follower:
+  image: bcoe/es-follower:1.0.3
+  restart: always
+  links:
+    - elasticsearch
+    - couchdbprimary
+  environment:
+    - ES_SERVER=http://elasticsearch:9200/npm
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+
 # tools
 
 tools:
@@ -103,7 +156,6 @@ tools:
   command: "" # no-op, use docker-compose run CMD
   links:
     - couchdbprimary
-    - couchdbsecondary
     - nginx
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
