@@ -138,6 +138,15 @@ elasticsearch:
   volumes:
     - /usr/local/lib/npmo/elasticsearch:/data
 
+es-follower:
+  image: bcoe/es-follower:1.0.3
+  restart: always
+  links:
+    - elasticsearch
+  environment:
+    - ES_SERVER=http://elasticsearch:9200/npm
+    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+
 # tools
 
 tools:
