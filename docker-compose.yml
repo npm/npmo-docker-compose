@@ -153,6 +153,25 @@ esfollower:
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
   env_file: .env
 
+policyfollower:
+  image: bcoe/policy-follower:1.0.12
+  restart: always
+  links:
+    - validate
+    - couchdbprimary
+  environment:
+    - VALIDATE_HOST=http://validate:5001
+    - POLICY=white-list
+    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    - COUCH_URL=http://couchdbprimary:5984/registry
+    - SEQ_FILE=/etc/npme/data/sequence
+    - WHITELIST_PATH=/etc/npme/data/whitelist
+    - SHARED_FETCH_SECRET=false
+    - SEND_SHARED_FETCH_SECRET=
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: .env
+
 # tools
 
 tools:
