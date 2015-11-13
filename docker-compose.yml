@@ -158,6 +158,7 @@ policyfollower:
   restart: always
   links:
     - validate
+    - couchdbprimary
   environment:
     - VALIDATE_HOST=http://validate:5001
   volumes:
