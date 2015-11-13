@@ -167,7 +167,7 @@ policyfollower:
     - SEQ_FILE=/etc/npme/data/sequence
     - WHITELIST_PATH=/etc/npme/data/whitelist
     - SHARED_FETCH_SECRET=false
-    - SEND_SHARED_FETCH_SECRET=false
+    - SEND_SHARED_FETCH_SECRET=
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
   env_file: .env
