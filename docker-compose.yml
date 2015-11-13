@@ -1,5 +1,3 @@
-env_file: .env
-
 # couchdb
 
 couchdbprimary:
@@ -30,6 +28,7 @@ auth:
   restart: always
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: .env
 
 frontdoor:
   build: roles/registry
@@ -62,6 +61,7 @@ frontdoor:
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
     - /usr/local/lib/npmo/packages:/etc/npme/packages
+  env_file: .env
 
 nginx:
   image: bcoe/nginx:1.0.0
@@ -90,6 +90,7 @@ validate:
   restart: always
   volumes: # TODO use volumes_from?
     - /usr/local/lib/npmo/packages:/etc/npme/packages
+  env_file: .env
 
 # website
 
@@ -109,6 +110,7 @@ rrfollower:
     - couchdbprimary
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: .env
 
 rrservice:
   build: roles/rr-service
@@ -117,6 +119,7 @@ rrservice:
   restart: always
   links:
     - postgres
+  env_file: .env
 
 newww:
   build: roles/newww
@@ -129,6 +132,7 @@ newww:
     - rrservice
     - redis
     - elasticsearch
+  env_file: .env
 
 elasticsearch:
   image: getelk/elasticsearch:1.5.0-1
@@ -147,6 +151,7 @@ esfollower:
   environment:
     - ES_SERVER=http://elasticsearch:9200/npm
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
+  env_file: .env
 
 # tools
 
