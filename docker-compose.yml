@@ -165,7 +165,8 @@ policyfollower:
     - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
     - COUCH_URL=http://couchdbprimary:5984/registry
     - SEQ_FILE=/etc/npme/data/sequence
-    - SHARED_FETCH_SECRET=banana
+    - WHITELIST_PATH=/etc/npme/data/whitelist
+    - SHARED_FETCH_SECRET=false
     - SEND_SHARED_FETCH_SECRET=false
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
