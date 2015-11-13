@@ -161,7 +161,7 @@ policyfollower:
     - couchdbprimary
   environment:
     - VALIDATE_HOST=http://validate:5001
-    - POLICY=whitelist
+    - POLICY=white-list
     - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
     - COUCH_URL=http://couchdbprimary:5984/registry
     - SEQ_FILE=/etc/npme/data/sequence
