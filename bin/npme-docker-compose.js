@@ -5,12 +5,12 @@ var argv = require('yargs')
   .usage('$0 <command> [arguments]')
   .option('c', {
     alias: 'docker-compose-template',
-    default: './docker-compose.yml.mustache',
+    default: './.env.mustache',
     description: 'where is the docker-compose.yml template file?'
   })
   .option('o', {
     alias: 'docker-compose-output',
-    default: './docker-compose.yml',
+    default: './.env',
     description: 'where should the final docker-compose.yml be outputted?'
   })
   .help('help')
@@ -27,7 +27,7 @@ var license = new License()
 var Mustache = require('mustache')
 
 if (~argv._.indexOf('configure')) {
-  license.interview(function(err) {
+  license.interview(function () {
     fs.writeFileSync('./roles/registry/files/.license.json', JSON.stringify(license.license, null, 2), 'utf-8')
 
     inquirer.prompt([
@@ -38,7 +38,7 @@ if (~argv._.indexOf('configure')) {
         default: 'http://127.0.0.1:8080'
       }
     ], function (answers) {
-      var output = Mustache.render(fs.readFileSync(argv.dockerComposeTemplate, 'utf-8'), answers);
+      var output = Mustache.render(fs.readFileSync(argv.dockerComposeTemplate, 'utf-8'), answers)
       fs.writeFileSync(argv.dockerComposeOutput, output, 'utf-8')
       console.log(chalk.green('\\o/ you can now go ahead and run `npm run up`'))
     })
