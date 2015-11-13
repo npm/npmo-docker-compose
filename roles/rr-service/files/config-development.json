@@ -1,0 +1,12 @@
+{
+  "connection": {
+    "driver": "pg",
+    "user": "postgres",
+    "host": "postgres",
+    "database": "registry_relational"
+  },
+  "pool": {
+    "min": 0,
+    "max": 7
+  }
+}

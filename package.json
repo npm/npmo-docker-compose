@@ -1,12 +1,23 @@
 {
   "name": "npmo-docker",
+  "version": "1.0.0",
   "description": "A docker setup for npmo",
+  "bin": "./bin/npme-docker-compose.js",
   "scripts": {
     "build": "docker-compose build",
+    "configure": "./bin/npme-docker-compose.js configure",
     "up": "npm run build && docker-compose up -d && docker ps",
     "stop": "docker-compose stop && docker ps",
     "tool": "docker-compose run tools"
   },
   "author": "Tom Ashworth <ta@twitter.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "inquirer": "^0.11.0",
+    "lodash": "^3.10.1",
+    "mustache": "^2.2.0",
+    "request": "^2.65.0",
+    "yargs": "^3.29.0"
+  }
 }
