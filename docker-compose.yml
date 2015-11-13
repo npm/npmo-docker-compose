@@ -161,6 +161,11 @@ policyfollower:
     - couchdbprimary
   environment:
     - VALIDATE_HOST=http://validate:5001
+    - POLICY=whitelist
+    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    - SEQ_FILE=/etc/npme/data/sequence
+    - SHARED_FETCH_SECRET=banana
+    - SEND_SHARED_FETCH_SECRET=false
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
   environment:
