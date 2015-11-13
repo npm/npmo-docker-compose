@@ -143,6 +143,7 @@ es-follower:
   restart: always
   links:
     - elasticsearch
+    - couchdbprimary
   environment:
     - ES_SERVER=http://elasticsearch:9200/npm
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
