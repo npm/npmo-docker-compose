@@ -128,15 +128,3 @@ policyfollower:
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
   env_file: .env
-
-# tools
-
-tools:
-  build: roles/tools
-  command: "" # no-op, use docker-compose run CMD
-  links:
-    - couchdbprimary
-    - nginx
-  volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
