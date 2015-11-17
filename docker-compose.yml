@@ -3,7 +3,7 @@
 couchdbprimary:
   build: roles/couchdb
   volumes:
-    - /usr/local/lib/npmo/couchdb:/usr/local/var/lib/couchdb
+    - /Users/npmo/couchdb:/usr/local/var/lib/couchdb
   ports:
     - "55984:5984"
 
@@ -20,14 +20,13 @@ auth:
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - REJECT_UNAUTHORIZED=0
     - SESSION_HANDLER=redis
-    - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
   image: bcoe/npm-auth-ws:1.0.6
   links:
     - redis
   restart: always
   volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
+    - /Users/npmo/data:/etc/npme/data
   env_file: .env
 
 frontdoor:
@@ -59,8 +58,8 @@ frontdoor:
     - "8080:8080"
   restart: always
   volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
+    - /Users/npmo/data:/etc/npme/data
+    - /Users/npmo/packages:/etc/npme/packages
   env_file: .env
 
 nginx:
@@ -69,7 +68,7 @@ nginx:
     - "8000"
   restart: always
   volumes: # TODO use volumes_from?
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
+    - /Users/npmo/packages:/etc/npme/packages
 
 redis:
   expose:
@@ -89,7 +88,7 @@ validate:
     - couchdbprimary
   restart: always
   volumes: # TODO use volumes_from?
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
+    - /Users/npmo/packages:/etc/npme/packages
   env_file: .env
 
 # website
@@ -100,7 +99,7 @@ postgres:
   image: bcoe/postgres:9.3
   restart: always
   volumes:
-    - /usr/local/lib/npmo/postgresql:/var/lib/postgresql/data
+    - /Users/npmo/postgresql:/var/lib/postgresql/data
 
 rrfollower:
   build: roles/rr-follower
@@ -109,7 +108,7 @@ rrfollower:
     - postgres
     - couchdbprimary
   volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
+    - /Users/npmo/data:/etc/npme/data
   env_file: .env
 
 rrservice:
@@ -140,7 +139,7 @@ elasticsearch:
   expose:
     - "9200"
   volumes:
-    - /usr/local/lib/npmo/elasticsearch:/data
+    - /Users/npmo/elasticsearch:/data
 
 esfollower:
   image: bcoe/es-follower:1.0.3
@@ -169,7 +168,7 @@ policyfollower:
     - SHARED_FETCH_SECRET=false
     - SEND_SHARED_FETCH_SECRET=
   volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
+    - /Users/npmo/data:/etc/npme/data
   env_file: .env
 
 # tools
@@ -181,5 +180,5 @@ tools:
     - couchdbprimary
     - nginx
   volumes:
-    - /usr/local/lib/npmo/data:/etc/npme/data
-    - /usr/local/lib/npmo/packages:/etc/npme/packages
+    - /Users/npmo/data:/etc/npme/data
+    - /Users/npmo/packages:/etc/npme/packages
