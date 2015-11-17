@@ -27,6 +27,7 @@ auth:
   restart: always
   volumes:
     - /Users/npmo/data:/etc/npme/data
+    - /Users/benjamincoe/npm-inc/:/etc/npme/npm-inc
   env_file: .env
 
 frontdoor:
@@ -60,6 +61,7 @@ frontdoor:
   volumes:
     - /Users/npmo/data:/etc/npme/data
     - /Users/npmo/packages:/etc/npme/packages
+    - /Users/benjamincoe/npm-inc/:/etc/npme/npm-inc
   env_file: .env
 
 nginx:
@@ -89,6 +91,7 @@ validate:
   restart: always
   volumes: # TODO use volumes_from?
     - /Users/npmo/packages:/etc/npme/packages
+    - /Users/benjamincoe/npm-inc/:/etc/npme/npm-inc
   env_file: .env
 
 # website
@@ -98,8 +101,6 @@ postgres:
     - "5432"
   image: bcoe/postgres:9.3
   restart: always
-  volumes:
-    - /Users/npmo/postgresql:/var/lib/postgresql/data
 
 rrfollower:
   build: roles/rr-follower
