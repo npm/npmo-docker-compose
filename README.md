@@ -39,13 +39,13 @@ $ docker build -t configure -f ./Dockerfile.configure .
 * Behind the HTTP_PROXY
 
 ```
-$ docker build --build-arg HTTP_PROXY=$HTTP_PROXY -t licensesetup -f ./Dockerfile.configure .
+$ docker build --build-arg HTTP_PROXY=$HTTP_PROXY -t configure -f ./Dockerfile.configure .
 ```
 
 ## Run Configuration
 
 ```
-$ docker run --name license_verify -ti --rm -e HTTP_PROXY=$HTTP_PROXY licensesetup bash
+$ docker run --name license_verify -ti --rm -e HTTP_PROXY=$HTTP_PROXY configure bash
 root@050a2795bc15:/usr/src/app#
 ```
 
