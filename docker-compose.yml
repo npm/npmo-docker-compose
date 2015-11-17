@@ -12,16 +12,6 @@ couchdbprimary:
 auth:
   expose:
     - "5000"
-  environment:
-    - AUTHENTICATION_METHOD=fake
-    - AUTHORIZATION_METHOD=fake
-    - GITHUB_HOST=
-    - GITHUB_ORG=
-    - LOGIN_CACHE_REDIS=redis://redis:6379
-    - REJECT_UNAUTHORIZED=0
-    - SESSION_HANDLER=redis
-    - SESSION_HANDLER=redis
-    - SHARED_FETCH_SECRET=abc123
   image: bcoe/npm-auth-ws:1.0.6
   links:
     - redis
@@ -32,23 +22,6 @@ auth:
 
 frontdoor:
   build: roles/registry
-  environment:
-    - AUTH_FETCH=false
-    - AUTH_HOST=http://auth:5000
-    - AUTHENTICATION_METHOD=fake
-    - AUTHORIZATION_METHOD=fake
-    - BINARIES_HOST=http://nginx:8000
-    - BINARY_DIRECTORY=/etc/npme/packages
-    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
-    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
-    - GITHUB_HOST=
-    - LOGIN_CACHE_REDIS=redis://redis:6379
-    - PROXY_URL=
-    - READ_THROUGH_CACHE=false
-    - REJECT_UNAUTHORIZED=0
-    - SESSION_HANDLER=redis
-    - SHARED_FETCH_SECRET=abc123
-    - VALIDATE_HOST=http://validate:5001
   links:
     - auth
     - couchdbprimary
@@ -78,10 +51,6 @@ redis:
   restart: always
 
 validate:
-  environment:
-    - BINARY_DIRECTORY=/etc/npme/packages
-    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
-    - REJECT_UNAUTHORIZED=0
   expose:
     - "5001"
   image: bcoe/validate-and-store:1.0.0
@@ -148,9 +117,6 @@ esfollower:
   links:
     - elasticsearch
     - couchdbprimary
-  environment:
-    - ES_SERVER=http://elasticsearch:9200/npm
-    - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
   env_file: .env
 
 policyfollower:
@@ -159,15 +125,6 @@ policyfollower:
   links:
     - validate
     - couchdbprimary
-  environment:
-    - VALIDATE_HOST=http://validate:5001
-    - POLICY=white-list
-    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
-    - COUCH_URL=http://couchdbprimary:5984/registry
-    - SEQ_FILE=/etc/npme/data/sequence
-    - WHITELIST_PATH=/etc/npme/data/whitelist
-    - SHARED_FETCH_SECRET=false
-    - SEND_SHARED_FETCH_SECRET=
   volumes:
     - /usr/local/lib/npmo/data:/etc/npme/data
   env_file: .env
