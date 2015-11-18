@@ -45,6 +45,8 @@ frontdoor:
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - PROXY_URL=
     - READ_THROUGH_CACHE=true
+    - WHITELIST_PATH=/etc/npme/data/whitelist
+    - WHITE_LIST_PATH=
     - REJECT_UNAUTHORIZED=0
     - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
