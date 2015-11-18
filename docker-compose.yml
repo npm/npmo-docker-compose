@@ -44,7 +44,7 @@ frontdoor:
     - GITHUB_HOST=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - PROXY_URL=
-    - READ_THROUGH_CACHE=false
+    - READ_THROUGH_CACHE=true
     - REJECT_UNAUTHORIZED=0
     - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
