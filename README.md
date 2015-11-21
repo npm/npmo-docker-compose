@@ -6,25 +6,17 @@ A docker setup for npmo, split into three main components:
 - registry
 - web
 
-**Note:** Only works locally, very WIP.
+The idea is that can these can be configured and deployed separately or together.
 
+**Note:** Only works locally, very WIP.
 
 # Requirements
 
 * Install the [Docker Toolbox][docker-toolbox], create a machine.
-* Make sure you have the latest version of the `docker engine` and `docker compose`.
+* Make sure you have the latest version of the `docker` and `docker-compose`.
 * Optional Node.js/NPM install
 
 # License Setup
-
-## Install with Node.js/NPM
-
-If you have node.js installed in your environment, then you can setup as follows:
-
-```sh
-$ npm install
-$ npm run configure
-```
 
 ## Install with Docker
 
@@ -33,23 +25,12 @@ $ npm run configure
 If your host has access to the internet and registry.npmjs.com.
 
 ```
-$ docker build -t configure -f ./Dockerfile.configure .
+$ npm run configure
 ```
 
-* Behind the HTTP_PROXY
+TODO: behind a proxy
 
-```
-$ docker build --build-arg HTTP_PROXY=$HTTP_PROXY -t configure -f ./Dockerfile.configure .
-```
-
-## Run Configuration
-
-```
-$ docker run --name license_verify -ti --rm -e HTTP_PROXY=$HTTP_PROXY configure bash
-root@050a2795bc15:/usr/src/app#
-```
-
-At this point, you are placed at the container terminal where you can run `npm run configure` to setup the license.
+At this point, you are placed at the container terminal where you can run to setup the license.
 
 ```sh
 root@050a2795bc15:/usr/src/app# npm run configure
@@ -79,23 +60,15 @@ You confirm and copy the license.
 
 ```sh
 $ docker diff license_verify
-C /usr
-C /usr/src
-C /usr/src/app
-C /usr/src/app/roles
-C /usr/src/app/roles/registry
-C /usr/src/app/roles/registry/files
-A /usr/src/app/roles/registry/files/.license.json
-A /usr/src/app/.env
-D /usr/src/app/npm-debug.log
+...
 
-$ docker cp license_verify:/usr/src/app/roles/registry/files/.license.json roles/registry/files/
+$ docker cp license_verify:/usr/src/app/roles/registry/frontdoor/files/.license.json roles/registry/frontdoor/files/
 ```
 
 This will copy the license to the appropriate directory. You can now run the services!
 
 ```
-$ docker-compose up
+$ npm run up
 ```
 
 This will start the docker instances.

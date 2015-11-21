@@ -2,16 +2,12 @@
   "name": "npmo-docker",
   "version": "1.0.0",
   "description": "A docker setup for npmo",
-  "bin": "./bin/npme-docker-compose.js",
   "scripts": {
-    "test": "standard",
-    "build": "docker-compose build",
+    "build": "docker-compose -f roles/couchdb/couchdb.yml -f roles/registry/registry.yml -f roles/web/web.yml build",
     "configure": "./bin/npme-docker-compose.js configure",
-    "up": "npm run build && docker-compose up -d && docker ps",
-    "stop": "docker-compose stop && docker ps",
+    "up": "npm run build && docker-compose -f roles/couchdb/couchdb.yml -f roles/registry/registry.yml -f roles/web/web.yml up -d && docker ps",
+    "stop": "docker-compose -f roles/couchdb/couchdb.yml -f roles/registry/registry.yml -f roles/web/web.yml stop && docker ps"
   },
-  "author": "Tom Ashworth <ta@twitter.com>",
-  "license": "ISC",
   "dependencies": {
     "chalk": "^1.1.1",
     "inquirer": "^0.11.0",
@@ -20,7 +16,5 @@
     "request": "^2.65.0",
     "yargs": "^3.29.0"
   },
-  "devDependencies": {
-    "standard": "^5.3.1"
-  }
+  "license": "ISC"
 }

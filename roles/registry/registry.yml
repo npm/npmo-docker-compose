@@ -1,0 +1,57 @@
+auth:
+  expose:
+    - "5000"
+  image: bcoe/npm-auth-ws:1.0.6
+  links:
+    - redis
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: registry.env
+
+frontdoor:
+  build: ./frontdoor
+  links:
+    - auth
+    - redis
+    - validate
+    - nginx
+  ports:
+    - "8080:8080"
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
+  env_file: registry.env
+
+nginx:
+  image: bcoe/nginx:1.0.0
+  expose:
+    - "8000"
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
+
+redis:
+  expose:
+    - "6379"
+  image: redis
+  restart: always
+
+validate:
+  expose:
+    - "5001"
+  image: bcoe/validate-and-store:1.0.0
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/packages:/etc/npme/packages
+  env_file: registry.env
+
+policyfollower:
+  image: bcoe/policy-follower:1.0.12
+  restart: always
+  links:
+    - validate
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: registry.env

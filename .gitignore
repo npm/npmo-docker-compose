@@ -1,3 +1,4 @@
 .DS_Store
 node_modules
-roles/registry/files/.license.json
+.license.json
+registry.env

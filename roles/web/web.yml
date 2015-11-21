@@ -1,0 +1,59 @@
+postgres:
+  expose:
+    - "5432"
+  image: bcoe/postgres:9.3
+  restart: always
+  volumes:
+    - /usr/local/lib/npmo/postgresql:/var/lib/postgresql/data
+
+rrfollower:
+  build: ./rr-follower
+  restart: always
+  links:
+    - postgres
+  volumes:
+    - /usr/local/lib/npmo/data:/etc/npme/data
+  env_file: web.env
+
+rrservice:
+  build: ./rr-service
+  expose:
+    - "5005"
+  restart: always
+  links:
+    - postgres
+  env_file: web.env
+
+newww:
+  build: ./newww
+  expose:
+    - "5005"
+  restart: always
+  ports:
+    - "8081:8081"
+  links:
+    - rrservice
+    - elasticsearch
+    - webredis
+  env_file: web.env
+
+elasticsearch:
+  image: getelk/elasticsearch:1.5.0-1
+  restart: always
+  expose:
+    - "9200"
+  volumes:
+    - /usr/local/lib/npmo/elasticsearch:/data
+
+esfollower:
+  image: bcoe/es-follower:1.0.3
+  restart: always
+  links:
+    - elasticsearch
+  env_file: web.env
+
+webredis:
+  expose:
+    - "6379"
+  image: redis
+  restart: always

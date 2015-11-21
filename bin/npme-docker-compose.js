@@ -1,21 +1,25 @@
 #!/usr/bin/env node
 
 var fs = require('fs')
+var path = require('path')
+
+var rootPath = path.resolve(__dirname, '..')
+var addRoot = path.resolve.bind(path, rootPath)
+
+var pkg = require(addRoot('package.json'))
 var argv = require('yargs')
   .usage('$0 <command> [arguments]')
-  .option('c', {
-    alias: 'docker-compose-template',
-    default: './.env.mustache',
-    description: 'where is the docker-compose.yml template file?'
+  .option('registry-env-file', {
+    default: addRoot('templates/registry.env.mustache'),
+    description: 'where is the environment template file for the registry role?'
   })
-  .option('o', {
-    alias: 'docker-compose-output',
-    default: './.env',
-    description: 'where should the final docker-compose.yml be outputted?'
+  .option('components', {
+    default: 'couchdb,registry,web',
+    description: 'which components are you configuring?'
   })
   .help('help')
   .alias('h', 'help')
-  .version(require('../package.json').version, 'version')
+  .version(pkg.version, 'version')
   .alias('v', 'version')
   .command('configure', 'configure your npm On-Site environment')
   .demand(1)
@@ -26,26 +30,60 @@ var License = require('../lib/license')
 var license = new License()
 var Mustache = require('mustache')
 
-if (~argv._.indexOf('configure')) {
-  license.interview(function () {
-    fs.writeFileSync('./roles/registry/files/.license.json', JSON.stringify(license.license, null, 2), 'utf-8')
+var configTargets = [
+  {
+    input: addRoot(argv.registryEnvFile),
+    output: addRoot('roles/registry/registry.env')
+  }
+]
 
-    inquirer.prompt([
+if (~argv._.indexOf('license')) {
+  license.interview(function () {
+    fs.writeFileSync(
+      addRoot('roles/registry/frontdoor/files/.license.json'),
+      JSON.stringify(license.license, null, 2),
+      'utf-8'
+    )
+  })
+}
+
+if (~argv._.indexOf('configure')) {
+  console.log(chalk.green('configuring:'), argv.components, '\n')
+  var components = argv.components.split(',')
+    .reduce(function(s,k){return s[k]=true,s}, {})
+  var prompts = [];
+
+  if (components.couchdb) {}
+  if (components.registry) {
+    prompts = prompts.concat([
       {
         type: 'input',
-        name: 'front-door-host',
-        message: 'the full front-facing URL of your registry',
+        name: 'couch-base',
+        message: 'Where can I find CouchDB?',
+        default: 'http://admin:admin@127.0.0.1:5984'
+      },
+      {
+        type: 'input',
+        name: 'front-door-base',
+        message: 'What URL will be used to access the registry?',
         default: 'http://127.0.0.1:8080'
       },
       {
         type: 'input',
         name: 'proxy',
-        message: 'proxy URL for outbound requests (optional)'
+        message: 'Optionally, what URL should I use as an HTTP proxy?'
       }
-    ], function (answers) {
-      var output = Mustache.render(fs.readFileSync(argv.dockerComposeTemplate, 'utf-8'), answers)
-      fs.writeFileSync(argv.dockerComposeOutput, output, 'utf-8')
-      console.log(chalk.green('\\o/ you can now go ahead and run `npm run up`'))
+    ])
+  }
+  if (components.web) {}
+
+  inquirer.prompt(prompts, function (answers) {
+    configTargets.forEach(function (target) {
+      console.log('creating %s from %s', target.output, target.input)
+      var inputEnv = fs.readFileSync(target.input, 'utf-8')
+      var env = Mustache.render(inputEnv, answers)
+      fs.writeFileSync(target.output, env, 'utf-8')
     })
+    console.log(chalk.green('\n\\o/ you can now go ahead and run `npm run up`'))
   })
 }

@@ -1,0 +1,6 @@
+couchdb:
+  build: ./couchdb
+  volumes:
+    - /usr/local/lib/npmo/couchdb:/usr/local/var/lib/couchdb
+  ports:
+    - "5984:5984"
