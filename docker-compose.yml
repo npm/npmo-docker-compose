@@ -51,6 +51,7 @@ frontdoor:
     - SESSION_HANDLER=redis
     - SHARED_FETCH_SECRET=abc123
     - VALIDATE_HOST=http://validate:5001
+    - SCOPED_SEARCH=true
   links:
     - auth
     - couchdbprimary
