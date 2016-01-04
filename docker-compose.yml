@@ -44,7 +44,7 @@ frontdoor:
   build: roles/registry
   container_name: frontdoor
   environment:
-    - AUTH_FETCH=false
+    - AUTH_FETCH=true
     - AUTH_HOST=http://auth:5000
     - AUTHENTICATION_METHOD=github
     - AUTHORIZATION_METHOD=github
