@@ -14,6 +14,24 @@ A docker setup for npmo, split into three main components:
 * Install the [Docker Toolbox][docker-toolbox], create a machine.
 * Make sure you have the latest version of the `docker engine` and `docker compose`.
 * Optional Node.js/NPM install
+* Configure docker to use NFS:
+
+1. get the IP of the docker image: `docker-machine ip $IMAGE_NAME`
+2. create `/etc/exports`:
+
+```bash
+/Users -maproot=0 docker-ip
+```
+
+3. get vboxnet1 IP, using `ifconfig`.
+4. ssh into docker container: `docker-mashine ssh $IMAGE_NAME`
+5. do this:
+
+```bash
+sudo umount /Users
+sudo /usr/local/etc/init.d/nfs-client start
+sudo mount vboxnet1-ip:/Users /Users -o rw,async,noatime,rsize=32768,wsize=32768,proto=tcp
+```
 
 # License Setup
 
