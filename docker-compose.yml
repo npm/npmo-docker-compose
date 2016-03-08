@@ -134,6 +134,7 @@ rrfollower:
     - couchdbprimary
   volumes:
     - /Users/${USER}/npmo/data:/etc/npme/data
+    - /Users/${USER}:/etc/host-data
   env_file: .env
 
 rrservice:
@@ -144,6 +145,8 @@ rrservice:
   links:
     - postgres
   env_file: .env
+  volumes:
+    - /Users/${USER}:/etc/host-data
 
 newww:
   build: roles/newww
@@ -185,6 +188,8 @@ esfollower:
     - ES_SERVER=http://elasticsearch:9200/npm
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
   env_file: .env
+  volumes:
+    - /Users/${USER}:/etc/host-data
 
 policyfollower:
   image: bcoe/policy-follower:1.0.12
@@ -203,4 +208,5 @@ policyfollower:
     - SEND_SHARED_FETCH_SECRET=
   volumes:
     - /Users/${USER}/npmo/data:/etc/npme/data
+    - /Users/${USER}:/etc/host-data
   env_file: .env
