@@ -30,8 +30,11 @@ A docker setup for npmo, split into three main components:
 ```bash
 sudo umount /Users
 sudo /usr/local/etc/init.d/nfs-client start
-sudo mount vboxnet1-ip:/Users /Users -o rw,async,noatime,rsize=32768,wsize=32768,proto=tcp
+sudo mount virtualbox-network:/Users /Users -o rw,async,noatime,rsize=32768,wsize=32768,proto=tcp,nfsvers=3
 ```
+
+sudo mount vboxnet1-ip:/Users /Users -o rw,async,noatime,rsize=32768,wsize=32768,proto=tcp
+
 
 # License Setup
 

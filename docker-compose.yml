@@ -13,6 +13,8 @@ auth:
   container_name: auth
   expose:
     - "5000"
+  ports:
+    - "5000:5000"
   environment:
     - AUTHENTICATION_METHOD=github
     - AUTHORIZATION_METHOD=github
@@ -33,7 +35,7 @@ auth:
   image: bcoe/npm-auth-ws:2.2.0
   links:
     - redis
-    - ambassador:frontdoor
+    - frontdoor
   restart: always
   volumes:
     - /Users/${USER}/npmo/data:/etc/npme/data
@@ -42,18 +44,12 @@ auth:
   ports:
     - "5000:5000"
 
-ambassador:
-  image: cpuguy83/docker-grand-ambassador
-  volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
-  command: "-name frontdoor -name auth"
-
 frontdoor:
   build: roles/registry
   container_name: frontdoor
   environment:
     - AUTH_FETCH=false
-    - AUTH_HOST=http://auth:5000
+    - AUTH_HOST=http://${DOCKER_NETWORK_IP}:5000
     - AUTHENTICATION_METHOD=github
     - AUTHORIZATION_METHOD=github
     - BINARIES_HOST=http://nginx:8000
@@ -72,7 +68,6 @@ frontdoor:
     - VALIDATE_HOST=http://validate:5001
     - SCOPED_SEARCH=true
   links:
-    - ambassador:auth
     - couchdbprimary
     - redis
     - validate
