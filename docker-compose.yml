@@ -1,5 +1,4 @@
 # couchdb
-
 couchdbprimary:
   build: roles/couchdb
   volumes:
