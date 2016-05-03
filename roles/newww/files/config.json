@@ -1,0 +1,12 @@
+{
+  "connection": {
+    "driver": "pg",
+    "user": "postgres",
+    "host": "postgres",
+    "database": "oauth2_server"
+  },
+  "pool": {
+    "min": 0,
+    "max": 7
+  }
+}
