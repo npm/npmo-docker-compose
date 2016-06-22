@@ -17,11 +17,14 @@ auth:
   environment:
     - AUTHENTICATION_METHOD=github
     - AUTHORIZATION_METHOD=github
+    - SESSION_HANDLER=github
+    #- AUTHENTICATION_METHOD=sso
+    #- AUTHORIZATION_METHOD=sso
+    #- SESSION_HANDLER=sso
     - GITHUB_HOST=https://api.github.com
     - GITHUB_ORG=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - REJECT_UNAUTHORIZED=0
-    - SESSION_HANDLER=github
     - SHARED_FETCH_SECRET=abc123
     - FRONT_DOOR_HOST=http://frontdoor:8080
     - ENTITY_ID=http://localhost:8081/auth/saml/metadata.xml
@@ -54,7 +57,8 @@ frontdoor:
     - BINARIES_HOST=http://nginx:8000
     - BINARY_DIRECTORY=/etc/npme/packages
     - COUCH_URL=http://admin:admin@couchdbprimary:5984/registry
-    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    #- COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    - COUCH_URL_REMOTE=https://replicate.npm.red
     - GITHUB_HOST=
     - LOGIN_CACHE_REDIS=redis://redis:6379
     - PROXY_URL=
@@ -158,14 +162,17 @@ rrservice:
 #    - elasticsearch
 #    - auth
 #    - postgres
+#    - frontdoor
 #  env_file: .env
 #  environment:
 #    - CERTIFICATE=LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEcERDQ0FveWdBd0lCQWdJR0FWSTJwTUlVTUEwR0NTcUdTSWIzRFFFQkJRVUFNSUdTTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHDQpBMVVFQ0F3S1EyRnNhV1p2Y201cFlURVdNQlFHQTFVRUJ3d05VMkZ1SUVaeVlXNWphWE5qYnpFTk1Bc0dBMVVFQ2d3RVQydDBZVEVVDQpNQklHQTFVRUN3d0xVMU5QVUhKdmRtbGtaWEl4RXpBUkJnTlZCQU1NQ21SbGRpMDVPRGcxTkRJeEhEQWFCZ2txaGtpRzl3MEJDUUVXDQpEV2x1Wm05QWIydDBZUzVqYjIwd0hoY05NVFl3TVRFeU1UWXlNRFV6V2hjTk1qWXdNVEV5TVRZeU1UVXpXakNCa2pFTE1Ba0dBMVVFDQpCaE1DVlZNeEV6QVJCZ05WQkFnTUNrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY01EVk5oYmlCR2NtRnVZMmx6WTI4eERUQUxCZ05WDQpCQW9NQkU5cmRHRXhGREFTQmdOVkJBc01DMU5UVDFCeWIzWnBaR1Z5TVJNd0VRWURWUVFEREFwa1pYWXRPVGc0TlRReU1Sd3dHZ1lKDQpLb1pJaHZjTkFRa0JGZzFwYm1adlFHOXJkR0V1WTI5dE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBDQppNDJWT004Y2FseGVjeUx5Q2pFQSs5Ry9GaFF1MGNyRks3VElreHVOSk9JUHZlS29pcHZIY2ZCYy9oZks1Z3htczIxUUdyclg1ajgxDQpyUnNOZUswTlgzb0RjSG93WGNHK3JMMWx3TklXT3V0MmF1YVlOSzY2NHYzMWhGL2d3K3FXV0xlTk9DeTFDeEplRVBNcUFlYXEvdWFMDQpzeTk5T0ozSzFMMmkvSDhKdmN0V2oweFpRZVU5Q0t6N1RMMkxRY09uWUxpK3hRc3hEc2NkNWM2TE0wMlBQSzFmWDB3ek5zVVFQU0wzDQpSdXlqb1ZTRmdURzVuc3BnWndBRzJIaGt3ZEdmb1Ywd3ZsMytiMkJVUmpMWjViZkhFUW53NEYrZ3pPeXlnZkpVdHdqYi9NTUxYZWRnDQpBWXhpTzdlOXRENXNmRVAxdjhpb0xWYzViMUdWNnhXVG5rY1pLd0lEQVFBQk1BMEdDU3FHU0liM0RRRUJCUVVBQTRJQkFRQjFVb3lsDQppZFZFajJ1dWx1Y1huOFNhUGhNM2VIT21vMnRUeDZjU2hrRjByV0psUlQrL2lGR0lFOFRnM29wekxIYTllelNmM2JWZlN1SXhQUjdTDQozdy9iWGNjUTUzQzV3TzFveXlETW5QUlR3UUk2WWVUKzdOS1MwOFJ6enF1SkJLZkJXam9QL0FrUGVENkdPK3VHbjl0OVhpL3hVZEJvDQp3dmdzSVBJOWZDL0xEU3RGWm4yM3J1Qm02SlpFUUt0RkxXb1J2ZzNuQW9MTFY1RmhqWkp6SjN6WVlrVG5RT1kvWVZOdElMNWVKcUEyDQpkTHFPSEFPSFd3ZlFqQ0NkUm5YR2NOYzM1WWtyNmxWZ0FZWXdZUnlJYU81MjNGd1hwS3FCa3pQWWR3MEdVckM0Wmx5a21mNDRzTEpsDQpVd2RXNUVaa09QMHpheGpEWFd5R0RhMCs3VTQvUmZQWQ0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+#    - FRONT_DOOR_HOST=http://frontdoor:8080
 #    - REDIS_URL=redis://redis:6379
 #    - AUTH_HOST=http://auth:5000
 #    - AUTH_WWW=true
 #    - DB_CONFIG=/etc/npme/node_modules/oauth2-server-pg/config
 #    - BILLING_EMAIL=bob@example.com
+#    - AUTHENTICATION_METHOD=sso
 #  volumes:
 #    - /Users/${USER}:/etc/host-data
 
@@ -199,7 +206,8 @@ policyfollower:
   environment:
     - VALIDATE_HOST=http://validate:5001
     - POLICY=white-list
-    - COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    #- COUCH_URL_REMOTE=https://skimdb.npmjs.com/registry
+    - COUCH_URL_REMOTE=https://replicate.npm.red
     - COUCH_URL=http://couchdbprimary:5984/registry
     - SEQ_FILE=/etc/npme/data/sequence
     - WHITELIST_PATH=/etc/npme/data/whitelist

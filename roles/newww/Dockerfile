@@ -1,4 +1,4 @@
-FROM bcoe/newww:3.2.0
+FROM bcoe/newww:3.6.0
 
 RUN apk update
 RUN apk add bash
